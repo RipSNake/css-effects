@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale= 1">
 	<!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="styles/styles.css">
 </head>
 <body class="">
 
@@ -16,40 +17,45 @@
 	<h1>CSS IMG Filter tryouts</h1>
 	<nav class="row navbar navbar-expand">
 		<div class="col-7">
-			<div class="col">
-				<ul id="img-list" class="navbar-nav">
-					<li class="nav-item"><a class="nav-link" href="#img-1">Gato</a></li>
-					<li class="nav-item"><a class="nav-link" href="#img-2">Estrellas</a></li>
-					<li class="nav-item"><a class="nav-link" href="#img-3">Tulipanes</a></li>
-				</ul>		
-			</div>
-			<div class="col">
-				<button title="Toggle Filter's List View">ICON</button>
-
-				<ul id="effects" class="navbar-nav">
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="filtersDropdown" aria-expanded="false"role="button" data-bs-toggle="dropdown">Filter</a>
-
-						<ul class="dropdown-menu" id="filter-selector" aria-labelledby="filtersDropdown">
-							<li class="nav-item"><button class="dropdown-item">Blur</button></li>
-							<li class="nav-item"><button class="dropdown-item">Brigthness</button></li>
-							<li class="nav-item"><button class="dropdown-item">Contrast</button></li>
-							<li class="nav-item"><button class="dropdown-item">Drop-Shadow</button></li>
-							<li class="nav-item"><button class="dropdown-item">Grayscale</button></li>
-							<li class="nav-item"><button class="dropdown-item">Hue-rotate</button></li>
-							<li class="nav-item"><button class="dropdown-item">Invert</button></li>
-							<li class="nav-item"><button class="dropdown-item">Opacity</button></li>
-							<li class="nav-item"><button class="dropdown-item">Saturate</button></li>
-							<li class="nav-item"><button class="dropdown-item">Sepia</button></li>		
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div class="col-5 row">
 			<div class="row">
-				<label class="col" for="blur">Blur</label>
-				<input class="col form-range" type="range" name="blur" value="30" style="flex-grow: 2;">	
+				<div class="col">
+					<ul id="img-list" class="navbar-nav">
+						<li class="nav-item"><a class="nav-link" href="#img-1">Gato</a></li>
+						<li class="nav-item"><a class="nav-link" href="#img-2">Estrellas</a></li>
+						<li class="nav-item"><a class="nav-link" href="#img-3">Tulipanes</a></li>
+					</ul>		
+				</div>
+				<div class="col">
+					<button title="Toggle Filter's List View" class="btn btn-info"><i class="bi bi-list"></i></button>
+
+					<ul id="effects" class="navbar-nav">
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="filtersDropdown" aria-expanded="false"role="button" data-bs-toggle="dropdown">Filter</a>
+
+							<ul class="dropdown-menu" id="filter-selector" aria-labelledby="filtersDropdown">
+								<li class="nav-item"><button class="dropdown-item" id="blur">Blur</button></li>
+								<li class="nav-item"><button class="dropdown-item" id="brigthness">Brigthness</button></li>
+								<li class="nav-item"><button class="dropdown-item" id="contrast">Contrast</button></li>
+								<li class="nav-item"><button class="dropdown-item" id="drop-shadow">Drop-Shadow</button></li>
+								<li class="nav-item"><button class="dropdown-item" id="grayscale">Grayscale</button></li>
+								<li class="nav-item"><button class="dropdown-item" id="hue-rotate">Hue-rotate</button></li>
+								<li class="nav-item"><button class="dropdown-item" id="invert">Invert</button></li>
+								<li class="nav-item"><button class="dropdown-item" id="opacity">Opacity</button></li>
+								<li class="nav-item"><button class="dropdown-item" id="saturate">Saturate</button></li>
+								<li class="nav-item"><button class="dropdown-item" id="sepia">Sepia</button></li>		
+							</ul>
+						</li>
+					</ul>
+				</div>
+		</div>
+	</div>
+		<div class="col-5 row">
+			
+			<div class="card" id="filterShow">
+				<div class="row">
+					<label class="col" for="blur">Blur</label>
+					<input class="col form-range" type="range" name="blur" value="30" style="flex-grow: 2;">
+				</div>
 			</div>
 			
 		</div>
@@ -72,7 +78,7 @@
 <footer>
 	
 </footer>
-<script type="text/javascript" src="js/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="js/javascript.js"></script>
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
