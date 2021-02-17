@@ -15,8 +15,8 @@
 
 <header id="top" class="">
 	<h1>CSS IMG Filter tryouts</h1>
-	<nav class="row navbar navbar-expand">
-		<div class="col-7">
+	<nav class="row navbar navbar-expand container-fluid">
+		<div class="col-7 align-self-start">
 			<div class="row">
 				<div class="col">
 					<ul id="img-list" class="navbar-nav">
@@ -26,9 +26,9 @@
 					</ul>		
 				</div>
 				<div class="col">
-					<button title="Toggle Filter's List View" class="btn btn-info"><i class="bi bi-list"></i></button>
+					<button id="filter-view" title="Toggle Filter's List View" class="btn btn-secondary d-inline-flex"><i class="bi bi-list"></i></button>
 
-					<ul id="effects" class="navbar-nav">
+					<ul id="effects" class="navbar-nav d-inline-flex">
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" id="filtersDropdown" aria-expanded="false"role="button" data-bs-toggle="dropdown">Filter</a>
 
@@ -49,31 +49,84 @@
 				</div>
 		</div>
 	</div>
-		<div class="col-5 row">
-			
-			<div class="card" id="filterShow">
-				<div class="row">
+	<!-- Filters input type="range" display -->
+		<div class="col-5">
+			<div class="row" id="filterShow">
+				<div class="row selected">
 					<label class="col" for="blur">Blur</label>
-					<input class="col form-range" type="range" name="blur" value="30" style="flex-grow: 2;">
+					<input class="col form-range" type="range" name="blur" value="0" style="flex-grow: 2;">
 				</div>
 			</div>
-			
 		</div>
+		<!-- End of Filters input type="range" display -->
 	</nav>
+
+		<div class="container-fluid row" id="filter-full-list">
+			<div class="col">
+				<div class="row filter-control">
+					<label class="col" for="blur">Blur</label>
+					<input class="col form-range" type="range" name="blur" value="0" style="flex-grow: 2;">
+				</div>
+				<div class="row filter-control">
+					<label class="col" for="brightness">Brightness</label>
+					<input class="col form-range" type="range" name="brightness" value="0" style="flex-grow: 2;">
+				</div>
+				<div class="row filter-control">
+					<label class="col" for="contrast">Contrast</label>
+					<input class="col form-range" type="range" name="contrast" value="0" style="flex-grow: 2;">
+				</div>
+				<div class="row filter-control">
+					<label class="col" for="drop-shadow">Drop-shadow</label>
+					<input class="col form-range" type="range" name="drop-shadow" value="0" style="flex-grow: 2;">
+				</div>
+				<div class="row filter-control">
+					<label class="col" for="grayscale">Grayscale</label>
+					<input class="col form-range" type="range" name="grayscale" value="0" style="flex-grow: 2;">
+				</div>
+			</div>
+			<div class="col">
+				<div class="row filter-control">
+					<label class="col" for="hue-rotate">Hue-rotate</label>
+					<input class="col form-range" type="range" name="hue-rotate" value="0" style="flex-grow: 2;">
+				</div>
+				<div class="row filter-control">
+					<label class="col" for="invert">Invert</label>
+					<input class="col form-range" type="range" name="invert" value="0" style="flex-grow: 2;">
+				</div>
+				<div class="row filter-control">
+					<label class="col" for="opacity">Opacity</label>
+					<input class="col form-range" type="range" name="opacity" value="0" style="flex-grow: 2;">
+				</div>
+				<div class="row filter-control">
+					<label class="col" for="saturate">Saturate</label>
+					<input class="col form-range" type="range" name="saturate" value="0" style="flex-grow: 2;">
+				</div>
+				<div class="row filter-control">
+					<label class="col" for="sepia">Sepia</label>
+					<input class="col form-range" type="range" name="sepia" value="0" style="flex-grow: 2;">
+				</div>
+			</div>
+		</div>
 </header>
 <main class="">
+	<!-- Img Display Layer -->
+	<div id="img-display-layer">
 	<div class="mb-5">
-		<img id="img-1" class="img-fluid" src="assets/gato-con-lentes.jpg" title="cat with color-reflecting glasses" alt="grey cat with round glasses reflecting colorful space image">
+		<img id="img-1" class="img-fluid show" src="assets/gato-con-lentes.jpg" title="cat with color-reflecting glasses" alt="grey cat with round glasses reflecting colorful space image">
 	</div>
 	
 	<div class="mb-5">
-		<img id="img-2" class="img-fluid" src="assets/estrellas-de-colores.jpg" title="path made of paper starts with different colors" alt="a lot of starts with different colors arranged as a path">
+		<img id="img-2" class="img-fluid hide" src="assets/estrellas-de-colores.jpg" title="path made of paper starts with different colors" alt="a lot of starts with different colors arranged as a path">
 	</div>
 
 	<div class="mb-5">
-		<img id="img-3" class="img-fluid" src="assets/colorful-tulips.jpg" title="arrange made of a hundred colorful tulips" alt="An arrange made of a hundred colorful tulips">
+		<img id="img-3" class="img-fluid hide" src="assets/colorful-tulips.jpg" title="arrange made of a hundred colorful tulips" alt="An arrange made of a hundred colorful tulips">
 	</div>
+</div>
+	<!-- End of Img Display Layer -->
+	<!-- Fixed button to return to the TOP -->
 	<button class="btn btn-outline-primary btn-sm" style="color: grey; position: fixed; bottom: 0; right: 0;"><a class="nav-link" href="#top" style="color: black">TOP</a></button>
+	<!-- End of Fixed button to return to the TOP-->
 </main>
 <footer>
 	
