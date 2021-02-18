@@ -26,8 +26,17 @@
 	];
 */
 
-window.onload = function() { console.log('window loaded')} ;
-// Variables declarations
+window.onload = function() { 
+	hideFiltersList();
+	console.log('window loaded');
+};
+
+/*
+*
+* Variable declarations
+*
+*/
+
 var filterValues = [
 	{filter: 'blur', value: 0},
 	{filter: 'brightness', value: 100},
@@ -43,8 +52,47 @@ var filterValues = [
 
 var displayedImg = 'img-1'; // to save the id of the img in display. Default value 'img-1'
 
+// To track the toggle view from one to all filters
+let filterListShowned = true;
+
+/*
+*
+* Adding Event Listener
+*
+*/
+
 // addEventListener to images button to show / hide un selected img
 document.getElementById('img-list').addEventListener('click',showImg);
+
+// listen to the toggle view button
+document.getElementById('filter-view').addEventListener('click', toggleFiltersView);
+
+// fetch filter list (dropdown-item buttons) and listen
+var filters = document.getElementById('filter-selector').getElementsByClassName('dropdown-item');
+for(let i = 0; i < filters.length; i++) {
+	filters[i].addEventListener('click', filterShow);
+};
+// addEventListener to the single input(range) element
+let mainInput = document.getElementById('singleFilterShow').getElementsByTagName('input');
+for(let i = 0; i < mainInput.length; i++) {
+	mainInput[i].addEventListener('click', saveActualValues);	
+};
+// addEventListener to the full list input(range)
+let listInputs = document.getElementById('filter-full-list').getElementsByTagName('input');
+for(let input of listInputs) {
+	input.addEventListener('click', saveActualValues);
+};
+
+
+
+
+
+
+/*
+*
+* Functions
+*
+*/
 
 function showImg(eventSrc) {
 	// slice href.value (extracting only the id and not including the '#')
@@ -61,32 +109,9 @@ function showImg(eventSrc) {
 	}
 	displayedImg = imgId; // save the id to the shown var
 };
-
-// fetch filter list (dropdown-item buttons)
-var filters = document.getElementById('filter-selector').getElementsByClassName('dropdown-item');
-// addEventListener('click') to the filter list buttons
-for(let i = 0; i < filters.length; i++) {
-	filters[i].addEventListener('click', filterShow);
-};
-
-// addEventListener to the input(range) element
-let mainInput = document.getElementById('singleFilterShow').getElementsByTagName('input');
-for(let i = 0; i < mainInput.length; i++) {
-	mainInput[i].addEventListener('click', saveActualValues);	
-};
-let listInputs = document.getElementById('filter-full-list').getElementsByTagName('input');
-for(let input of listInputs) {
-	input.addEventListener('click', saveActualValues);
-};
-
-// listen to the toggle view button
-document.getElementById('filter-view').addEventListener('click', toggleFiltersView);
-// toggle view from one to all filters
-let showned = true;
-hideFiltersList();
-
+// Show or Hide the complete filters list
 function toggleFiltersView() {
-	if(showned) {
+	if(filterListShowned) {
 		hideFiltersList();
 	} else {
 		showFiltersList();
@@ -104,7 +129,7 @@ function showFiltersList() {
 		r.disabled = true;
 	}
 	// change var used to indicate that all filters are been displayed 
-	showned = true; 
+	filterListShowned = true; 
 };
 // hide all filters list and enable single filter input
 function hideFiltersList() {
@@ -118,7 +143,7 @@ function hideFiltersList() {
 		r.disabled = false;
 	}
 	// change var used to indicate that all filters are been displayed
-	showned = false;
+	filterListShowned = false;
 };
 // change the single filter input displayed, acording to the selection of the dropdown-item's filter list
 function filterShow(event) {
@@ -153,7 +178,7 @@ function saveActualValues(event) {
 	};
 	applyFilters(displayedImg,el.name,el.value);
 };
-// apply filter to the shown image
+// applies ONE filter to the shown image, overwriting any other filter already applied
 function applyFilters(imgElementId, filter, value) {
 	let unit = '%';
 	if(filter === 'blur') {
@@ -172,6 +197,26 @@ function applyFilters(imgElementId, filter, value) {
 	// apply the filter
 	i.style.filter = f;
 };
+// function to work with more than one filter at the same time.
+// Syntax: filter: contrast(200%) brightness(150%) sepia(50%);
+// we will use the filtersValue Object to reference the filter's names
+function addFilter(filterName) {
+	console.log('addFilter(',filterName,')');
+}
+
+function removeFilter(filterName) {
+	console.log('removeFilter(',filterName,')');
+}
+
+
+/*
+*
+*	Section for playing with js
+*
+*
+*/
+
+
 // Auto populate filter list with all the filters 
 function populateFilterList() {
 	for(filter of filterValues) {
