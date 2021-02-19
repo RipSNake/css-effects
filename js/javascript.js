@@ -27,32 +27,7 @@
 */
 
 window.onload = function() { console.log('window loaded')} ;
-
-var shownImg = 'img-1'; // to save the id of the img in display. Default value 'img-1'
-
-// addEventListener to images button to show / hide un selected img
-document.getElementById('img-list').addEventListener('click',showImg);
-
-function showImg(eventSrc) {
-	let imgId = eventSrc.srcElement.attributes.href.value.slice(1);
-	let imgs = document.getElementById('img-display-layer').getElementsByTagName('img');
-	
-	for(let i = 0; i < imgs.length; i++) {
-		if(imgs[i].id === imgId) {
-			imgs[i].classList.add('show');
-			imgs[i].classList.remove('hide');
-		} else {
-			imgs[i].classList.remove('show');
-			imgs[i].classList.add('hide');
-		}
-	}
-
-	shownImg = imgId; // save the id to the shown var
-};
-
-// fetch filter list items
-var filter = document.getElementById('filter-selector').getElementsByClassName('dropdown-item');
-
+// Variables declarations
 var filterValues = [
 	{filter: 'blur', value: 0},
 	{filter: 'brightness', value: 100},
@@ -61,22 +36,50 @@ var filterValues = [
 	{filter: 'grayscale', value: 0},
 	{filter: 'hue-rotate', value: 0},
 	{filter: 'invert', value: 0},
-	{filter: 'opacity', value: 1},
+	{filter: 'opacity', value: 100}, // we use 100 cause will treat it like a %
 	{filter: 'saturate', value: 100},
 	{filter: 'sepia', value: 0}
 ];
 
+var displayedImg = 'img-1'; // to save the id of the img in display. Default value 'img-1'
+
+// addEventListener to images button to show / hide un selected img
+document.getElementById('img-list').addEventListener('click',showImg);
+
+function showImg(eventSrc) {
+	// slice href.value (extracting only the id and not including the '#')
+	let imgId = eventSrc.srcElement.attributes.href.value.slice(1);
+	// fetch the images
+	let imgs = document.getElementById('img-display-layer').getElementsByTagName('img');
+	
+	for(let i = 0; i < imgs.length; i++) {
+		if(imgs[i].id === imgId) {
+			imgs[i].classList.remove('hide');
+		} else {
+			imgs[i].classList.add('hide');
+		}
+	}
+	displayedImg = imgId; // save the id to the shown var
+};
+
+// fetch filter list (dropdown-item buttons)
+var filters = document.getElementById('filter-selector').getElementsByClassName('dropdown-item');
 // addEventListener('click') to the filter list buttons
-for(let i = 0; i < filter.length; i++) {
-	filter[i].addEventListener('click', filterShow);
+for(let i = 0; i < filters.length; i++) {
+	filters[i].addEventListener('click', filterShow);
 };
 
 // addEventListener to the input(range) element
-let mainInput = document.getElementById('filterShow').getElementsByTagName('input');
+let mainInput = document.getElementById('singleFilterShow').getElementsByTagName('input');
 for(let i = 0; i < mainInput.length; i++) {
 	mainInput[i].addEventListener('click', saveActualValues);	
 };
+let listInputs = document.getElementById('filter-full-list').getElementsByTagName('input');
+for(let input of listInputs) {
+	input.addEventListener('click', saveActualValues);
+};
 
+// listen to the toggle view button
 document.getElementById('filter-view').addEventListener('click', toggleFiltersView);
 // toggle view from one to all filters
 let showned = true;
@@ -89,71 +92,58 @@ function toggleFiltersView() {
 		showFiltersList();
 	}
 };
-
+// show all filters list and disable single filter input
 function showFiltersList() {
-	document.getElementById('filter-full-list').classList.remove('hide');
-
-	let filterInputs = document.getElementById('filterShow').children;
-	
-	let range = document.getElementById('filterShow').getElementsByTagName('input');
-
+	// Make all the filter's range inputs visible
+	document.getElementById('filter-full-list').classList.remove('hide'); 
+	// Disable filters button
+	document.getElementById('filtersDropdown').classList.add('unclickable');
+	// Disable single input
+	let range = document.getElementById('singleFilterShow').getElementsByTagName('input');
 	for(let r of range) {
 		r.disabled = true;
 	}
-	
-
-
-	for(let filter of filterInputs) {
-		filter.classList.remove('hide');
-	}
-	// Disable filters button
-	document.getElementById('filtersDropdown').classList.add('unclickable');
+	// change var used to indicate that all filters are been displayed 
 	showned = true; 
 };
-
+// hide all filters list and enable single filter input
 function hideFiltersList() {
+	// Hide all the filter's range inputs
 	document.getElementById('filter-full-list').classList.add('hide');
-	let filterInputs = document.getElementById('filterShow').children;
-	
-	let range = document.getElementById('filterShow').getElementsByTagName('input');
+	// Enable filters button
+	document.getElementById('filtersDropdown').classList.remove('unclickable');
+	// Enable single filter's input
+	let range = document.getElementById('singleFilterShow').getElementsByTagName('input');
 	for(let r of range) {
 		r.disabled = false;
 	}
-
-	for(let filter of filterInputs) {
-		if(!filter.classList.contains('selected')){
-			filter.classList.add('hide');
-		}
-	}
-	document.getElementById('filtersDropdown').classList.remove('unclickable');
+	// change var used to indicate that all filters are been displayed
 	showned = false;
 };
-
-
-// addEventListener passes as first argument the element which trigered the event
+// change the single filter input displayed, acording to the selection of the dropdown-item's filter list
 function filterShow(event) {
-	let filter = event.srcElement;
-
-	// fetch filter's label elements
-	let filterLabel = document.getElementById('filterShow').getElementsByTagName('label');
-	
-	filterLabel[0].setAttribute('for', filter.id);
-	filterLabel[0].innerHTML = filter.innerHTML;
-	
-	// fetch input and show name of selected filter
+	// identify the element that trigered the function
+	let filterSelected = event.srcElement;
+	// fetch single filter's input label
+	let filterLabel = document.getElementById('singleFilterShow').getElementsByTagName('label');
+	// set attributes to reflect the selection
+	filterLabel[0].setAttribute('for', filterSelected.id);
+	filterLabel[0].innerHTML = filterSelected.innerHTML;
+	// fetch single filter's input and set name attribute to respond to the filter selected
 	let value = document.getElementsByTagName('input');
-	value[0].name = filter.id;
-	
-
+	value[0].name = filterSelected.id;
+	// Iterate through the filter's list to retrieve the last known value
 	for(let i = 0; i < filterValues.length; i++){
 		if(value[0].name === filterValues[i].filter) {
 			value[0].value = filterValues[i].value;
 		}
 	}
+	// Once all the information is fetched we apply the filter to the displayed img
+	applyFilters(displayedImg, filterSelected.id, value[0].value);
 };
 // save the values in input(range) to the filterValues array
-function saveActualValues(inputValue) {
-	let el = inputValue.srcElement;
+function saveActualValues(event) {
+	let el = event.srcElement;
 	let saved = false;
 	for(let i = 0; i < filterValues.length && saved === false; i++) {
 		if(el.name === filterValues[i].filter) {
@@ -161,7 +151,7 @@ function saveActualValues(inputValue) {
 			saved = true;
 		};
 	};
-	applyFilters(shownImg,el.name,el.value);
+	applyFilters(displayedImg,el.name,el.value);
 };
 // apply filter to the shown image
 function applyFilters(imgElementId, filter, value) {
@@ -175,18 +165,40 @@ function applyFilters(imgElementId, filter, value) {
 	let i = document.getElementById(imgElementId);
 	// parse the filter string
 	let f = filter+'('+value+unit+')';
-
+	// test for dropshadow
 	if(filter === 'drop-shadow'){
 		f = filter+'('+value+'px '+value+'px)';
 	}
 	// apply the filter
 	i.style.filter = f;
-
-	console.log('Filter '+f+' applied');
 };
-
+// Auto populate filter list with all the filters 
 function populateFilterList() {
 	for(filter of filterValues) {
-
+		// Create the three elements in which the filter name and value will be displayed
+		let div = document.createElement('div');
+		let label = document.createElement('label');
+		let input = document.createElement('input');
+		// Add the classes for styling div
+		div.classList.add('row')
+		// Add class and attributes for label
+		label.classList.add('col');
+		label.setAttribute('for',filter.filter);
+		label.innerHTML = filter.filter;
+		// Add classes and attributes for input type range
+		input.classList.add('col','form-range');
+		input.setAttribute('type','range');
+		input.name = filter.filter;
+		input.value = filter.value; // Default for developing purposes
+		// put the label and input inside the div
+		div.appendChild(label);
+		div.appendChild(input);
+		// Append the div to the element where we want to display the label/input's list
+		document.getElementById('the-list').appendChild(div);
+		console.log(div);
 	}
 };
+
+function getRock() {
+	console.log('You got rocked!');
+}

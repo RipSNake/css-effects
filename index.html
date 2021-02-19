@@ -47,11 +47,11 @@
 						</li>
 					</ul>
 				</div>
+			</div>
 		</div>
-	</div>
 	<!-- Filters input type="range" display -->
 		<div class="col-5">
-			<div class="row" id="filterShow">
+			<div class="row" id="singleFilterShow">
 				<div class="row selected">
 					<label class="col" for="blur">Blur</label>
 					<input class="col form-range" type="range" name="blur" value="0" style="flex-grow: 2;">
@@ -87,7 +87,7 @@
 			<div class="col">
 				<div class="row filter-control">
 					<label class="col" for="hue-rotate">Hue-rotate</label>
-					<input class="col form-range" type="range" name="hue-rotate" value="0" style="flex-grow: 2;">
+					<input class="col form-range" type="range" name="hue-rotate" value="0" max="360" style="flex-grow: 2;">
 				</div>
 				<div class="row filter-control">
 					<label class="col" for="invert">Invert</label>
@@ -129,7 +129,9 @@
 	<!-- End of Fixed button to return to the TOP-->
 </main>
 <footer>
-	
+	<div class="container-fluid" id="the-list">
+		
+	</div>
 </footer>
 <script type="text/javascript" src="js/javascript.js"></script>
 <!-- JavaScript Bundle with Popper -->
