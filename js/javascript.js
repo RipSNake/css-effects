@@ -54,7 +54,8 @@ var displayedImg = 'img-1'; // to save the id of the img in display. Default val
 
 // To track the toggle view from one to all filters
 let filterListShowned = true;
-
+// Save the actual filter value
+let actualMultipleFilter = '';
 /*
 *
 * Adding Event Listener
@@ -80,9 +81,16 @@ for(let i = 0; i < mainInput.length; i++) {
 // addEventListener to the full list input(range)
 let listInputs = document.getElementById('filter-full-list').getElementsByTagName('input');
 for(let input of listInputs) {
-	input.addEventListener('click', saveActualValues);
+	if(input.type.toLowerCase() == 'range') {
+		input.addEventListener('click', saveActualValues);
+	}
 };
-
+// addEventListener to the checkbox for enabling multiple filter action
+for(let input of listInputs) {
+	if(input.type.toLowerCase() == 'checkbox') {
+		input.addEventListener('click', activateFilter);
+	}
+}
 
 
 
@@ -168,15 +176,23 @@ function filterShow(event) {
 };
 // save the values in input(range) to the filterValues array
 function saveActualValues(event) {
-	let el = event.srcElement;
+	let value = event.srcElement.value;
+	let filterName;
+	if(event.srcElement.name.search('-') != -1) {
+		filterName = event.srcElement.name.slice(0, event.srcElement.name.search('-'));	
+	} else {
+		filterName = event.srcElement.name;
+	}
+	
 	let saved = false;
+
 	for(let i = 0; i < filterValues.length && saved === false; i++) {
-		if(el.name === filterValues[i].filter) {
-			filterValues[i].value = el.value;
+		if(filterName === filterValues[i].filter) {
+			filterValues[i].value = value;
 			saved = true;
 		};
 	};
-	applyFilters(displayedImg,el.name,el.value);
+	applyFilters(displayedImg,filterName,value);
 };
 // applies ONE filter to the shown image, overwriting any other filter already applied
 function applyFilters(imgElementId, filter, value) {
@@ -197,17 +213,44 @@ function applyFilters(imgElementId, filter, value) {
 	// apply the filter
 	i.style.filter = f;
 };
-// function to work with more than one filter at the same time.
-// Syntax: filter: contrast(200%) brightness(150%) sepia(50%);
+
+/*
+*
+*	function to work with multiple filters
+*	Receives the filter name and value (ex: "contrast(80%)")and add it to existing "actualMultipleFilter" string that
+* represents the filters applied
+*/
+
+function activateFilter(event) {
+	console.log("activate filter function");
+	console.log(event.srcElement.checked);
+	if(event.srcElement.checked) {
+		addFilter(event);
+	} else {
+		removeFilter(event);
+	}
+}
+
+
+// Syntax example: "filter: contrast(200%) brightness(150%) sepia(50%);""
 // we will use the filtersValue Object to reference the filter's names
-function addFilter(filterName) {
+function addFilter(event) {
+	let actualMultipleFilter = document.getElementById(displayedImg).style.filter;
+	let filterName = event.srcElement.name;
+	let value = document.getElementsByName(filterName+'-value')[0].value;
+
+	console.log(filterName);
+	console.log(value);
+
+	if(!actualMultipleFilter.contains(filterName)) {
+		actualMultipleFilter += filterName;
+	}
 	console.log('addFilter(',filterName,')');
 }
 
-function removeFilter(filterName) {
-	console.log('removeFilter(',filterName,')');
+function removeFilter(event) {
+	console.log('removeFilter(',event,')');
 }
-
 
 /*
 *
