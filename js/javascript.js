@@ -38,16 +38,16 @@ window.onload = function() {
 */
 
 var filterValues = [
-	{filter: 'blur', value: 0},
-	{filter: 'brightness', value: 100},
-	{filter: 'contrast', value: 100},
-	{filter: 'drop-shadow', 'h-shadow-value': 0, 'v-shadow-value': 0, spread: 0},
-	{filter: 'grayscale', value: 0},
-	{filter: 'hue-rotate', value: 0},
-	{filter: 'invert', value: 0},
-	{filter: 'opacity', value: 100}, // we use 100 cause will treat it like a %
-	{filter: 'saturate', value: 100},
-	{filter: 'sepia', value: 0}
+	{name: 'blur', value: 0, checked: false},
+	{name: 'brightness', value: 100, checked: false},
+	{name: 'contrast', value: 100, checked: false},
+	{name: 'drop-shadow', 'h-value': 0, 'v-value': 0, spread: 0, checked: false},
+	{name: 'grayscale', value: 0, checked: false},
+	{name: 'hue-rotate', value: 0, checked: false},
+	{name: 'invert', value: 0, checked: false},
+	{name: 'opacity', value: 100, checked: false}, // we use 100 cause will treat it like a %
+	{name: 'saturate', value: 100, checked: false},
+	{name: 'sepia', value: 0, checked: false}
 ];
 
 var displayedImg = 'img-1'; // to save the id of the img in display. Default value 'img-1'
@@ -74,15 +74,13 @@ for(let i = 0; i < filters.length; i++) {
 	filters[i].addEventListener('click', filterShow);
 };
 // addEventListener to the single input(range) element
-let mainInput = document.getElementById('singleFilterShow').getElementsByTagName('input');
-for(let i = 0; i < mainInput.length; i++) {
-	mainInput[i].addEventListener('click', saveActualValues);	
-};
+document.getElementById('single-range').addEventListener('click', saveActualValue);	
+
 // addEventListener to the full list input(range)
 let listInputs = document.getElementById('filter-full-list').getElementsByTagName('input');
 for(let input of listInputs) {
 	if(input.type.toLowerCase() == 'range') {
-		input.addEventListener('click', saveActualValues);
+		input.addEventListener('click', saveActualValue);
 	}
 };
 // addEventListener to the checkbox for enabling multiple filter action
@@ -103,6 +101,14 @@ for(let input of listInputs) {
 */
 
 function showImg(eventSrc) {
+	let selectButtons = document.getElementById('img-list').getElementsByTagName('a');
+	for(let btn of selectButtons) {
+		if(btn.attributes.href === eventSrc.srcElement.attributes.href) {
+			btn.classList.add('selected');
+		} else {
+			btn.classList.remove('selected');
+		}
+	}
 	// slice href.value (extracting only the id and not including the '#')
 	let imgId = eventSrc.srcElement.attributes.href.value.slice(1);
 	// fetch the images
@@ -172,85 +178,80 @@ function filterShow(event) {
 		}
 	}
 	// Once all the information is fetched we apply the filter to the displayed img
-	applyFilters(displayedImg, filterSelected.id, value[0].value);
+	applyFilter(displayedImg, filterSelected.id, value[0].value);
 };
 // save the values in input(range) to the filterValues array
-function saveActualValues(event) {
+function saveActualValue(event) {
+	let saved = false;
 	let value = event.srcElement.value;
 	let filterName;
-	if(event.srcElement.name.search('-') != -1) {
-		filterName = event.srcElement.name.slice(0, event.srcElement.name.search('-'));	
-	} else {
+	if(event.srcElement.id === 'single-range') {
 		filterName = event.srcElement.name;
-	}
-	
-	let saved = false;
-
-	for(let i = 0; i < filterValues.length && saved === false; i++) {
-		if(filterName === filterValues[i].filter) {
-			filterValues[i].value = value;
-			saved = true;
+		applyFilter(displayedImg,filterName,value);	
+	} else {
+		filterName = event.srcElement.name.slice(0, event.srcElement.name.lastIndexOf('-'));
+		for(let i = 0; i < filterValues.length && saved === false; i++) {
+			if(filterName === filterValues[i].name) {
+				filterValues[i].value = value;
+				saved = true;
+			};
 		};
-	};
-	applyFilters(displayedImg,filterName,value);
+		applyMultipleFilters();
+	}
 };
 // applies ONE filter to the shown image, overwriting any other filter already applied
-function applyFilters(imgElementId, filter, value) {
-	let unit = '%';
-	if(filter === 'blur') {
-		unit = 'px';
-	} else if(filter === 'hue-rotate') {
-		unit = 'deg';
-	}
-	// access the element's filter property (inside style)
+function applyFilter(imgElementId, filter, value) {
+	
 	let i = document.getElementById(imgElementId);
-	// parse the filter string
-	let f = filter+'('+value+unit+')';
-	// test for dropshadow
-	if(filter === 'drop-shadow'){
-		f = filter+'('+value+'px '+value+'px)';
-	}
+	// parse the filter to string
+	let f = parseFilter(filter, value);
 	// apply the filter
 	i.style.filter = f;
 };
 
+// add the value unit acording to the filter name and return all the string "contrast(100%)"
+function parseFilter(filterName, value) {
+	let filter;
+	let unit = '%';
+	if(filterName === 'blur' || filterName === 'drop-shadow') {
+		unit = 'px';
+	} else if(filterName === 'hue-rotate') {
+		unit = 'deg';
+	}
+	filter = filterName+'('+value+unit+')';
+	if(filterName === 'drop-shadow') {
+		filter = filterName+'('+value+unit+' '+value+unit+')';
+	}
+	return filter;
+}
+// Listen to the checkbox and modify the filtersValue check attribute
+function activateFilter(event) {
+	for(filter of filterValues) {
+		if(filter.name === event.srcElement.name){
+			filter.checked = event.srcElement.checked;
+		}
+	}
+	applyMultipleFilters();
+}
 /*
 *
 *	function to work with multiple filters
 *	Receives the filter name and value (ex: "contrast(80%)")and add it to existing "actualMultipleFilter" string that
 * represents the filters applied
 */
-
-function activateFilter(event) {
-	console.log("activate filter function");
-	console.log(event.srcElement.checked);
-	if(event.srcElement.checked) {
-		addFilter(event);
-	} else {
-		removeFilter(event);
+function applyMultipleFilters() {
+	// Clear the multiple filter string
+	actualMultipleFilter = '';
+	// Add
+	for(let filter of filterValues){
+		if(filter.checked === true){
+			actualMultipleFilter += parseFilter(filter.name, filter.value) + ' ';
+		}
 	}
+	document.getElementById(displayedImg).style.filter = actualMultipleFilter;
 }
 
 
-// Syntax example: "filter: contrast(200%) brightness(150%) sepia(50%);""
-// we will use the filtersValue Object to reference the filter's names
-function addFilter(event) {
-	let actualMultipleFilter = document.getElementById(displayedImg).style.filter;
-	let filterName = event.srcElement.name;
-	let value = document.getElementsByName(filterName+'-value')[0].value;
-
-	console.log(filterName);
-	console.log(value);
-
-	if(!actualMultipleFilter.contains(filterName)) {
-		actualMultipleFilter += filterName;
-	}
-	console.log('addFilter(',filterName,')');
-}
-
-function removeFilter(event) {
-	console.log('removeFilter(',event,')');
-}
 
 /*
 *
@@ -271,12 +272,12 @@ function populateFilterList() {
 		div.classList.add('row')
 		// Add class and attributes for label
 		label.classList.add('col');
-		label.setAttribute('for',filter.filter);
-		label.innerHTML = filter.filter;
+		label.setAttribute('for',filter.name);
+		label.innerHTML = filter.name;
 		// Add classes and attributes for input type range
 		input.classList.add('col','form-range');
 		input.setAttribute('type','range');
-		input.name = filter.filter;
+		input.name = filter.name;
 		input.value = filter.value; // Default for developing purposes
 		// put the label and input inside the div
 		div.appendChild(label);
