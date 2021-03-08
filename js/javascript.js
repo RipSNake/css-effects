@@ -169,16 +169,17 @@ function filterShow(event) {
 	filterLabel[0].setAttribute('for', filterSelected.id);
 	filterLabel[0].innerHTML = filterSelected.innerHTML;
 	// fetch single filter's input and set name attribute to respond to the filter selected
-	let value = document.getElementsByTagName('input');
-	value[0].name = filterSelected.id;
+	let value = document.getElementById('single-range');
+	value.name = filterSelected.id;
+	console.log(value.name);
 	// Iterate through the filter's list to retrieve the last known value
 	for(let i = 0; i < filterValues.length; i++){
-		if(value[0].name === filterValues[i].filter) {
-			value[0].value = filterValues[i].value;
+		if(value.name === filterValues[i].name) {
+			value.value = filterValues[i].value;
 		}
 	}
 	// Once all the information is fetched we apply the filter to the displayed img
-	applyFilter(displayedImg, filterSelected.id, value[0].value);
+	applyFilter(displayedImg, filterSelected.id, value.value);
 };
 // save the values in input(range) to the filterValues array
 function saveActualValue(event) {
